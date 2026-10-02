@@ -216,7 +216,10 @@ class CopilotEventTests(unittest.TestCase):
                     command = hooks[event][0]["bash"]
                     result = subprocess.run(command, shell=True, input=json.dumps({"sessionId": "smoke", "toolName": "bash"}),
                                             text=True, capture_output=True, timeout=5,
-                                            env=os.environ | {"XDG_STATE_HOME": str(root / "state"),
+                                            env=os.environ | {"HOME": str(root),
+                                                              "XDG_CONFIG_HOME": str(root / ".config"),
+                                                              "XDG_STATE_HOME": str(root / "state"),
+                                                              "SIDEPULSE_DISABLE_EVENT_SOCKET": "0",
                                                               "SIDEPULSE_AGENT_ORIGIN": "GitHub Copilot App"})
                     self.assertEqual(result.returncode, 0)
                     self.assertEqual(result.stdout, "")
