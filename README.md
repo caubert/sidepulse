@@ -659,9 +659,17 @@ treated as Done unless the agent emits `<!-- sidepulse:ask -->`; concrete
 follow-ups such as "Want me to push?" still count as Ask. Questions inside
 markdown code spans or fenced code examples are ignored.
 
-Codex `PermissionRequest` events are treated as Ask and remain sticky until the
-matching tool command finishes. This prevents unrelated same-session activity
-from hiding an approval prompt that is still waiting on the user.
+Codex `PermissionRequest` events for manual or unknown reviewers are treated as
+Ask and remain sticky until the matching tool command finishes or the turn ends
+or is interrupted. This prevents unrelated same-session activity from hiding a
+real approval prompt. For sandbox and ordinary MCP tool requests, the hook reads
+only the matching turn's `approvals_reviewer` metadata from at most 1 MiB of the
+local transcript tail. Confirmed `auto_review` requests show Working and do not
+create a pending user approval, so a cancelled automatic review cannot leave Ask
+stuck. This metadata check is independent of the optional transcript status
+fallback. Missing or changed transcript metadata keeps Ask; app-specific and
+Computer Use approvals keep Ask because they can require a person even in
+automatic review mode. See [Codex automatic review](https://learn.chatgpt.com/docs/sandboxing/auto-review).
 
 For Codex, Claude, Grok, Cursor, or Junie projects that should report this reliably, add
 guidance like this to the relevant agent instructions:

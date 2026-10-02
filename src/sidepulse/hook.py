@@ -31,6 +31,10 @@ def format_hook_payload(
             "parse_error": str(exc),
         }
 
+    if provider == "codex" and isinstance(payload, dict):
+        from .codex_hook import normalize_payload
+
+        payload = normalize_payload(payload)
     if include_origin and isinstance(payload, dict):
         payload = annotate_payload_with_origin(provider, payload)
     if provider == "codex":
