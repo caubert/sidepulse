@@ -663,7 +663,7 @@ Codex `PermissionRequest` events for manual or unknown reviewers are treated as
 Ask and remain sticky until the matching tool command finishes or the turn ends
 or is interrupted. This prevents unrelated same-session activity from hiding a
 real approval prompt. For sandbox and ordinary MCP tool requests, the hook reads
-only the matching turn's `approvals_reviewer` metadata from at most 1 MiB of the
+only the matching turn's `approvals_reviewer` metadata from at most 8 MiB of the
 local transcript tail. Confirmed `auto_review` requests show Working and do not
 create a pending user approval, so a cancelled automatic review cannot leave Ask
 stuck. This metadata check is independent of the optional transcript status

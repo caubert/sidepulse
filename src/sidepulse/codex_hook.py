@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any
 
 
-TURN_CONTEXT_READ_LIMIT = 1024 * 1024
+TURN_CONTEXT_READ_LIMIT = 8 * 1024 * 1024
 
 
 def normalize_payload(payload: dict[str, Any]) -> dict[str, Any]:

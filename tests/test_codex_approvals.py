@@ -104,6 +104,12 @@ class CodexApprovalTests(unittest.TestCase):
         self.transcript.mkdir()
         self.assertNotIn("sidepulse_approvals_reviewer", normalize_payload(self.payload))
 
+    def test_long_turn_still_finds_reviewer_metadata(self):
+        self.write_contexts(self.context("auto_review"), {
+            "type": "response_item", "payload": {"content": "x" * (1536 * 1024)},
+        })
+        self.assertEqual(normalize_payload(self.payload)["sidepulse_approvals_reviewer"], "auto_review")
+
     def test_non_permission_events_do_not_read_the_transcript(self):
         for event in ("PreToolUse", "PostToolUse", "Stop"):
             with self.subTest(event=event), patch("sidepulse.codex_hook.os.open") as opened:
