@@ -203,6 +203,16 @@ def hook_log_main(provider: str, log_path: Path, event: str | None = None) -> in
             payload = raw if isinstance(raw, dict) else {}
             normalized = normalize_payload(event, payload)
             payload_text = json.dumps(normalized, separators=(",", ":"), ensure_ascii=False)
+        elif provider == "copilot":
+            from .copilot_hook import normalize_payload
+
+            try:
+                raw = json.loads(payload_text or "{}")
+            except json.JSONDecodeError:
+                raw = {}
+            payload = raw if isinstance(raw, dict) else {}
+            event_name = event or payload.get("hook_event_name") or payload.get("hookEventName") or ""
+            payload_text = json.dumps(normalize_payload(event_name, payload), ensure_ascii=False)
         elif provider == "junie":
             try:
                 raw = json.loads(payload_text or "{}")
